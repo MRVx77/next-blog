@@ -12,8 +12,8 @@ export const users = pgTable("users", {
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).unique(),
   emailVerified: boolean("email_verified").default(false),
-  createAt: timestamp("created_at").defaultNow().notNull(),
-  updateAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const sessions = pgTable("sessions", {
@@ -25,8 +25,8 @@ export const sessions = pgTable("sessions", {
   expiresAt: timestamp("expires_at"),
   ipAddress: varchar("ip_address", { length: 255 }),
   userAgent: text("user_agent"),
-  createAt: timestamp("created_at").defaultNow().notNull(),
-  updateAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const accounts = pgTable("accounts", {
@@ -37,8 +37,8 @@ export const accounts = pgTable("accounts", {
   accountId: varchar("account_id", { length: 255 }).notNull(),
   providerId: varchar("provider_id", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
-  createAt: timestamp("created_at").defaultNow().notNull(),
-  updateAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const posts = pgTable("posts", {
@@ -50,8 +50,8 @@ export const posts = pgTable("posts", {
   authorId: varchar("author_id", { length: 255 })
     .references(() => users.id)
     .notNull(),
-  createAt: timestamp("created_at").defaultNow().notNull(),
-  updateAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // each user can have multiple posts, but each post belongs to one user
