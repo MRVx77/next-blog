@@ -11,8 +11,11 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { signIn } from "@/lib/auth-client";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 //schema
 const LoginSchema = z.object({
@@ -23,6 +26,7 @@ const LoginSchema = z.object({
 type LoginFormValues = z.infer<typeof LoginSchema>;
 
 function LoginForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
@@ -33,12 +37,24 @@ function LoginForm() {
     },
   });
 
-  const onSubmit = (values: LoginFormValues) => {
+  const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
 
     try {
-      console.log(values);
-    } catch (error) {}
+      const { error } = await signIn.email({
+        email: values.email,
+        password: values.password,
+      });
+      if (error) {
+        toast("Login failed. Please check your credentials and try again.");
+      }
+      toast("Login successful! Welcome.");
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
