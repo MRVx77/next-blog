@@ -2,13 +2,14 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   pgTable,
+  serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: varchar("id", { length: 255 }).primaryKey(),
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).unique(),
   emailVerified: boolean("email_verified").default(false),
@@ -17,7 +18,7 @@ export const users = pgTable("users", {
 });
 
 export const sessions = pgTable("sessions", {
-  id: varchar("id", { length: 255 }).primaryKey(),
+  id: serial("id").primaryKey(),
   userId: varchar("user_id", { length: 255 })
     .references(() => users.id)
     .notNull(),
@@ -30,7 +31,7 @@ export const sessions = pgTable("sessions", {
 });
 
 export const accounts = pgTable("accounts", {
-  id: varchar("id", { length: 255 }).primaryKey(),
+  id: serial("id").primaryKey(),
   userId: varchar("user_id", { length: 255 })
     .references(() => users.id)
     .notNull(),
@@ -42,7 +43,7 @@ export const accounts = pgTable("accounts", {
 });
 
 export const posts = pgTable("posts", {
-  id: varchar("id", { length: 255 }).primaryKey(),
+  id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
