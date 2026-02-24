@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { posts } from "@/lib/db/schema";
 import { slugify } from "@/lib/utils";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function createPost(formData: FormData) {
@@ -55,5 +56,21 @@ export async function createPost(formData: FormData) {
         authorId: session.user.id,
       })
       .returning();
-  } catch (error) {}
+
+    //revalidate page to home page and refresh
+    revalidatePath("/");
+    revalidatePath("/post/${slug}");
+    revalidatePath("/profile");
+
+    return {
+      success: true,
+      message: "Post created successfully",
+      slug,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Faild to create post",
+    };
+  }
 }

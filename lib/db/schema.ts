@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  integer,
   pgTable,
   serial,
   text,
@@ -9,21 +10,21 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).unique(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const sessions = pgTable("sessions", {
-  id: serial("id").primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey(),
   userId: varchar("user_id", { length: 255 })
     .references(() => users.id)
     .notNull(),
-  token: varchar("token", { length: 255 }).notNull(),
-  expiresAt: timestamp("expires_at"),
+  token: varchar("token", { length: 255 }),
+  expiresAt: timestamp("expires_at").notNull(),
   ipAddress: varchar("ip_address", { length: 255 }),
   userAgent: text("user_agent"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -31,13 +32,13 @@ export const sessions = pgTable("sessions", {
 });
 
 export const accounts = pgTable("accounts", {
-  id: serial("id").primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey(),
   userId: varchar("user_id", { length: 255 })
     .references(() => users.id)
     .notNull(),
   accountId: varchar("account_id", { length: 255 }).notNull(),
   providerId: varchar("provider_id", { length: 255 }).notNull(),
-  password: varchar("password", { length: 255 }).notNull(),
+  password: text("password"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -45,7 +46,7 @@ export const accounts = pgTable("accounts", {
 export const posts = pgTable("posts", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
-  description: text("description").notNull(),
+  description: varchar("description", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   content: text("content").notNull(),
   authorId: varchar("author_id", { length: 255 })

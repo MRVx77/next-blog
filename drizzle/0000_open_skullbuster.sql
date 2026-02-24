@@ -3,15 +3,15 @@ CREATE TABLE "accounts" (
 	"user_id" varchar(255) NOT NULL,
 	"account_id" varchar(255) NOT NULL,
 	"provider_id" varchar(255) NOT NULL,
-	"password" varchar(255) NOT NULL,
+	"password" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "posts" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"title" varchar(255) NOT NULL,
-	"description" text NOT NULL,
+	"description" varchar(255) NOT NULL,
 	"slug" varchar(255) NOT NULL,
 	"content" text NOT NULL,
 	"author_id" varchar(255) NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE "posts" (
 CREATE TABLE "sessions" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"user_id" varchar(255) NOT NULL,
-	"token" varchar(255) NOT NULL,
-	"expires_at" timestamp,
+	"token" varchar(255),
+	"expires_at" timestamp NOT NULL,
 	"ip_address" varchar(255),
 	"user_agent" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE "sessions" (
 CREATE TABLE "users" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
-	"email" varchar(255),
+	"email" varchar(255) NOT NULL,
 	"email_verified" boolean DEFAULT false,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,

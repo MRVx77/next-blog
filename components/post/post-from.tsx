@@ -7,7 +7,10 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition } from "react";
+import { startTransition, useTransition } from "react";
+import { createPost } from "@/actions/post-actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 //post form schema for validation
 const postSchema = z.object({
@@ -26,6 +29,7 @@ type PostFormValues = z.infer<typeof postSchema>;
 
 function PostForm() {
   const [isPending, setIsPending] = useTransition();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -40,7 +44,29 @@ function PostForm() {
   });
 
   const onFormSubmit = async (data: PostFormValues) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        formData.append("content", data.content);
+
+        let res;
+
+        res = await createPost(formData);
+        console.log(res);
+
+        if (res.success) {
+          toast("Poast created successfully");
+          router.refresh();
+          router.push("/");
+        } else {
+          toast(res.message);
+        }
+      } catch (error) {
+        toast("Faild to create post");
+      }
+    });
   };
 
   return (

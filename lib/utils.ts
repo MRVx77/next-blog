@@ -8,6 +8,6 @@ export function cn(...inputs: ClassValue[]) {
 export function slugify(text: string): string {
   return text
     .toLocaleLowerCase()
-    .replace(/[^W ]+/g, "")
+    .replace(/[^a-z0-9 ]+/g, "")
     .replace(/ +/g, "-");
 }
