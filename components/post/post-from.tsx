@@ -54,7 +54,7 @@ function PostForm() {
         let res;
 
         res = await createPost(formData);
-        console.log(res);
+        // console.log(res);
 
         if (res.success) {
           toast("Poast created successfully");
