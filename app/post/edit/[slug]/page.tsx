@@ -27,8 +27,17 @@ async function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
 
   return (
     <Container>
-      <h1 className="max-w-2xl font-bold mb-6">Edit</h1>
-      <PostForm />
+      <h1 className="max-w-2xl text-3xl mt-6 font-bold mb-6">Edit :-</h1>
+      <PostForm
+        isEditing={true}
+        post={{
+          id: post.id,
+          title: post.title,
+          description: post.description,
+          content: post.content,
+          slug: post.slug,
+        }}
+      />
     </Container>
   );
 }
