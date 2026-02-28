@@ -56,7 +56,7 @@ function UserMenu({ user }: UserMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={"ghost"} className=" relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-8 w-8 hover:cursor-pointer">
             <AvatarFallback>{getInitials(user?.name) || "User"}</AvatarFallback>
           </Avatar>
         </Button>

@@ -29,12 +29,17 @@ export interface PostContentProps {
     id: number;
     title: string;
     description: string;
+    content: string;
     slug: string;
     createdAt: Date;
-    upDateAt: Date;
+    updatedAt: Date;
     author: {
       name: string;
     };
   };
   isAuthor: Boolean;
+}
+
+export interface DeletePostButtonProps {
+  postId: number;
 }
