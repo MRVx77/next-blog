@@ -35,6 +35,7 @@ export async function createPost(formData: FormData) {
 
     // create slug post titls
     const slug = slugify(title);
+
     // check if slug already exists
     const existingPost = await db.query.posts.findFirst({
       where: eq(posts.slug, slug),
@@ -60,7 +61,7 @@ export async function createPost(formData: FormData) {
 
     //revalidate page to home page and refresh
     revalidatePath("/");
-    revalidatePath("/post/${slug}");
+    revalidatePath(`/post/${slug}`);
     revalidatePath("/profile");
 
     return {
@@ -69,6 +70,7 @@ export async function createPost(formData: FormData) {
       slug,
     };
   } catch (error) {
+    console.log(error, "falid to add post");
     return {
       success: false,
       message: "Faild to create post",
@@ -112,5 +114,45 @@ export async function updatePost(postId: number, formData: FormData) {
         message: "A post with this title already exists",
       };
     }
-  } catch (error) {}
+
+    const post = await db.query.posts.findFirst({
+      where: eq(posts.id, postId),
+    });
+
+    if (post?.authorId !== session.user.id) {
+      return {
+        success: false,
+        message: "You have to be authorized to edit this post",
+      };
+    }
+
+    await db
+      .update(posts)
+      .set({
+        title,
+        description,
+        content,
+        slug,
+        updatedAt: new Date(),
+      })
+      .where(eq(posts.id, postId));
+
+    revalidatePath("/");
+    revalidatePath(`/post/${slug}`);
+    revalidatePath("/profile");
+
+    return {
+      success: true,
+      message: "You have update the post successfully",
+      slug,
+    };
+  } catch (error) {
+    console.log(error, "failed to edit");
+
+    return {
+      success: false,
+      message: "Failed to create post",
+    };
+    //7.04
+  }
 }

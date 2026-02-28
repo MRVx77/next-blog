@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useTransition } from "react";
-import { createPost } from "@/actions/post-actions";
+import { createPost, updatePost } from "@/actions/post-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -71,11 +71,20 @@ function PostForm({ isEditing, post }: PostFormProps) {
 
         let res;
 
-        res = await createPost(formData);
+        if (isEditing && post) {
+          res = await updatePost(post.id, formData);
+        } else {
+          res = await createPost(formData);
+        }
+
         // console.log(res);
 
         if (res.success) {
-          toast("Poast created successfully");
+          toast(
+            isEditing
+              ? "Poast edited successfully"
+              : "Poast created successfully",
+          );
           router.refresh();
           router.push("/");
         } else {
