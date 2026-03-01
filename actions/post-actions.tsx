@@ -153,6 +153,55 @@ export async function updatePost(postId: number, formData: FormData) {
       success: false,
       message: "Failed to create post",
     };
-    //7.04
+  }
+}
+
+export async function deletePost(postId: number) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: "You must logged in to edit the post!",
+      };
+    }
+
+    const postToDelete = await db.query.posts.findFirst({
+      where: eq(posts.id, postId),
+    });
+
+    if (!postToDelete) {
+      return {
+        success: false,
+        message: "Post not found",
+      };
+    }
+
+    if (postToDelete?.authorId !== session.user.id) {
+      return {
+        success: false,
+        message: "You have to be authorized to delete this post",
+      };
+    }
+
+    await db.delete(posts).where(eq(posts.id, postId));
+
+    revalidatePath("/");
+    revalidatePath("/profile");
+
+    return {
+      success: true,
+      message: "Post deleted successfully",
+    };
+  } catch (error) {
+    console.log(error, "failed to edit");
+
+    return {
+      success: false,
+      message: "Failed to create post",
+    };
   }
 }
